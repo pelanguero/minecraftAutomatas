@@ -4,8 +4,8 @@ import { LegionStateMachineTargets } from 'base-types'
 import { Vec3 } from 'vec3'
 import { placeBlockModule } from '@/modules'
 import { Bot } from 'mineflayer'
-
-function fillFunction(bot: Bot, targets: LegionStateMachineTargets) {
+import { Logger } from 'winston';
+function fillFunction(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
   let placeBlock2Position: Vec3 | undefined
   const { getNewPositionForPlaceBlock, blocksCanBeReplaced, getPathToPlace } = placeBlockModule(bot)
 
@@ -19,7 +19,7 @@ function fillFunction(bot: Bot, targets: LegionStateMachineTargets) {
   exit.x = 125
   exit.y = 313
 
-  const moveToCantSeeBlock = new BehaviorMoveTo(bot, targets)
+  const moveToCantSeeBlock = new BehaviorMoveTo(bot, targets,logger)
   moveToCantSeeBlock.stateName = 'Cant see block'
   moveToCantSeeBlock.movements = targets.movements
   moveToCantSeeBlock.x = 125
@@ -30,13 +30,13 @@ function fillFunction(bot: Bot, targets: LegionStateMachineTargets) {
   findInteractPosition.x = 325
   findInteractPosition.y = 113
 
-  const moveToBlock = new BehaviorMoveTo(bot, targets)
+  const moveToBlock = new BehaviorMoveTo(bot, targets,logger)
   moveToBlock.stateName = 'Move To Block'
   moveToBlock.movements = targets.movements
   moveToBlock.x = 525
   moveToBlock.y = 113
 
-  const mineBlock = new BehaviorDigBlock(bot, targets)
+  const mineBlock = new BehaviorDigBlock(bot, targets,logger)
   mineBlock.stateName = 'Mine Block'
   mineBlock.x = 725
   mineBlock.y = 113
@@ -51,7 +51,7 @@ function fillFunction(bot: Bot, targets: LegionStateMachineTargets) {
   placeBlock2.x = 525
   placeBlock2.y = 313
 
-  const loadConfig = new BehaviorLoadConfig(bot, targets)
+  const loadConfig = new BehaviorLoadConfig(bot, targets,logger)
   loadConfig.stateName = 'Load Bot Config'
   loadConfig.x = 325
   loadConfig.y = 113

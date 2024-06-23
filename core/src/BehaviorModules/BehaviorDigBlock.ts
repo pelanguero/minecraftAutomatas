@@ -4,6 +4,7 @@ import { Vec3 } from "vec3"
 import { LegionStateMachineTargets } from 'base-types'
 import { StateBehavior } from "mineflayer-statemachine"
 import { digBlockModule, botWebsocket } from '@/modules'
+import { Logger } from 'winston';
 export class BehaviorDigBlock implements StateBehavior {
   active: boolean;
   readonly bot: Bot
@@ -11,11 +12,11 @@ export class BehaviorDigBlock implements StateBehavior {
   stateName: string
   x?: number
   y?: number
-
+  logger:Logger
   isEndFinished: boolean
   digBlock: (position: Vec3) => Promise<void>
 
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     this.bot = bot
     this.targets = targets
@@ -25,6 +26,7 @@ export class BehaviorDigBlock implements StateBehavior {
     this.digBlock = digBlock
 
     this.isEndFinished = false
+    this.logger=logger
   }
 
   isFinished() {

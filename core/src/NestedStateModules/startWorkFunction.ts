@@ -9,8 +9,8 @@ import MinerJob from '@/NestedStateModules/minerJob/init'
 import SorterJob from '@/NestedStateModules/sorterJob/init'
 import CrafterJobFunction from '@/NestedStateModules/crafterJob/init'
 import { Bot } from 'mineflayer'
-
-function startWorkFunction(bot: Bot, targets: LegionStateMachineTargets) {
+import { Logger } from 'winston';
+function startWorkFunction(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
   const { getAllBlocksExceptLeafs } = movementModule(bot, targets)
 
   const start = new BehaviorFollowEntity(bot, targets)
@@ -37,7 +37,7 @@ function startWorkFunction(bot: Bot, targets: LegionStateMachineTargets) {
   breederJob.x = 135
   breederJob.y = 320
 
-  const minerJob = MinerJob(bot, targets)
+  const minerJob = MinerJob(bot, targets,logger)
   minerJob.x = 325
   minerJob.y = 50
 

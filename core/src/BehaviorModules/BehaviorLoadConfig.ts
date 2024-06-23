@@ -1,6 +1,7 @@
 import { StateBehavior } from "mineflayer-statemachine"
 import { Config, LegionStateMachineTargets, Jobs } from "base-types"
 import { Bot } from "mineflayer"
+import { Logger } from 'winston';
 // TODO delete this file
 export class BehaviorLoadConfig implements StateBehavior {
   active: boolean
@@ -25,8 +26,8 @@ export class BehaviorLoadConfig implements StateBehavior {
   plantAreas: Config['plantAreas']
   itemsCanBeEat: Config['itemsCanBeEat']
   itemsToBeReady: Config['itemsToBeReady']
-
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  logger:Logger
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.bot = bot
     this.targets = targets
     this.stateName = 'BehaviorLoadConfig'
@@ -46,6 +47,7 @@ export class BehaviorLoadConfig implements StateBehavior {
     this.plantAreas = []
     this.itemsCanBeEat = []
     this.itemsToBeReady = []
+    this.logger=logger
   }
 
   onStateEntered() {

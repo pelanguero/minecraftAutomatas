@@ -4,7 +4,7 @@ import { LegionStateMachineTargets, MineCordsConfig } from 'base-types'
 import { botWebsocket } from '@/modules'
 import { StateBehavior } from 'mineflayer-statemachine';
 import { Bot } from 'mineflayer';
-
+import { Logger } from 'winston';
 export class BehaviorMinerCurrentLayer implements StateBehavior {
   active: boolean;
   readonly bot: Bot;
@@ -20,8 +20,8 @@ export class BehaviorMinerCurrentLayer implements StateBehavior {
   endLayer: number | undefined
   x?: number
   y?: number
-
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  logger: Logger
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     this.bot = bot
     this.targets = targets
@@ -30,6 +30,7 @@ export class BehaviorMinerCurrentLayer implements StateBehavior {
     // this.nextLayer = false
     this.isEndFinished = false
     this.xIsInverted = false
+    this.logger=logger
   }
 
   isFinished() {

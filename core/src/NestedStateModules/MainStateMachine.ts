@@ -6,11 +6,11 @@ import { botWebsocket, getFreePort, movementModule, startPrismarineViewer } from
 import mineflayerPathfinder from 'mineflayer-pathfinder'
 import { afterDeathFunction } from '@/NestedStateModules/afterDeathFunction'
 import { StateTransition, BotStateMachine, StateMachineWebserver, BehaviorIdle, NestedStateMachine } from 'mineflayer-statemachine'
-
+import { Logger } from 'winston';
 // @ts-ignore
 import inventoryViewer from 'mineflayer-web-inventory'
 
-const startStateMachine = (bot: Bot) => {
+const startStateMachine = (bot: Bot,logger:Logger) => {
   const { debugMode } = config
 
   const movements = new mineflayerPathfinder.Movements(bot)
@@ -67,7 +67,7 @@ const startStateMachine = (bot: Bot) => {
   watiState.x = 125
   watiState.y = 313
 
-  const death = afterDeathFunction(bot, targets)
+  const death = afterDeathFunction(bot, targets,logger)
   death.x = 425
   death.y = 213
 

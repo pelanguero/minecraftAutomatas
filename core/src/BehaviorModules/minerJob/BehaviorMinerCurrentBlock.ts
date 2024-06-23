@@ -2,6 +2,7 @@ import { LegionStateMachineTargets, MineCordsConfig } from 'base-types'
 import { Bot } from 'mineflayer';
 import { StateBehavior } from 'mineflayer-statemachine';
 import { Vec3 } from 'vec3'
+import { Logger } from 'winston';
 export class BehaviorMinerCurrentBlock implements StateBehavior {
   active: boolean;
   readonly bot: Bot;
@@ -31,8 +32,8 @@ export class BehaviorMinerCurrentBlock implements StateBehavior {
 
   x?: number
   y?: number
-
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  logger: Logger
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     this.bot = bot
     this.targets = targets
@@ -44,6 +45,7 @@ export class BehaviorMinerCurrentBlock implements StateBehavior {
     this.isEndFinished = false
     this.firstBlockOnLayer = true
     this.getBlockInfo = false
+    this.logger = logger
   }
 
   isFinished() {

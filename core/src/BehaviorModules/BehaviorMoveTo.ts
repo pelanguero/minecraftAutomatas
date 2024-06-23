@@ -3,7 +3,7 @@ import mineflayerPathfinder, { Movements } from 'mineflayer-pathfinder'
 import { LegionStateMachineTargets, Vec3WithDimension } from 'base-types'
 import { movementModule, botWebsocket } from '@/modules'
 import { StateBehavior } from 'mineflayer-statemachine'
-
+import { Logger } from 'winston';
 export class BehaviorMoveTo implements StateBehavior {
   active: boolean
   readonly bot: Bot
@@ -11,7 +11,7 @@ export class BehaviorMoveTo implements StateBehavior {
   stateName: string
   x?: number
   y?: number
-
+  logger:Logger
   currentDate?: number
   success: boolean
   isEndFinished: boolean
@@ -21,7 +21,7 @@ export class BehaviorMoveTo implements StateBehavior {
   timeout?: number
   timeLimit?: ReturnType<typeof setTimeout>
 
-  constructor(bot: Bot, targets: LegionStateMachineTargets, timeout?: number) {
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger ,timeout?: number) {
     this.stateName = 'moveTo'
     this.active = false
     this.timeout = timeout
@@ -32,7 +32,7 @@ export class BehaviorMoveTo implements StateBehavior {
     this.bot = bot
     this.targets = targets
     this.movements = new mineflayerPathfinder.Movements(bot)
-
+    this.logger=logger
     this.movementModule = movementModule(bot, targets)
   }
 

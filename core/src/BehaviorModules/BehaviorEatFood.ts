@@ -5,7 +5,7 @@ import { botWebsocket } from '@/modules'
 import mcDataLoader from 'minecraft-data'
 import { StateBehavior } from "mineflayer-statemachine"
 import { Bot } from "mineflayer";
-
+import { Logger } from 'winston';
 export class BehaviorEatFood implements StateBehavior {
   active: boolean;
   readonly bot: Bot
@@ -14,16 +14,17 @@ export class BehaviorEatFood implements StateBehavior {
   stateName: string
   x?: number
   y?: number
-
+  logger:Logger
   finished: boolean
 
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     this.bot = bot
     this.targets = targets
     this.stateName = 'BehaviorEatFood'
     this.finished = false
     this.mcData = mcDataLoader(bot.version)
+    this.logger=logger
   }
 
   onStateEntered() {

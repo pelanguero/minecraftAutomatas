@@ -3,8 +3,8 @@ import { BehaviorGetReady, BehaviorEquipAll } from '@/BehaviorModules'
 import GoChestsFunctions from '@/NestedStateModules/getReady/goChestsFunctions'
 import { LegionStateMachineTargets } from 'base-types'
 import { Bot } from 'mineflayer'
-
-export default (bot: Bot, targets: LegionStateMachineTargets) => {
+import { Logger } from 'winston';
+export default (bot: Bot, targets: LegionStateMachineTargets,logger:Logger) => {
   const start = new BehaviorIdle()
   start.stateName = 'Start'
   start.x = 125
@@ -19,7 +19,7 @@ export default (bot: Bot, targets: LegionStateMachineTargets) => {
   goChests.x = 725
   goChests.y = 313
 
-  const getReady = new BehaviorGetReady(bot, targets)
+  const getReady = new BehaviorGetReady(bot, targets,logger)
   getReady.stateName = 'Check if bot is ready'
   getReady.x = 525
   getReady.y = 113

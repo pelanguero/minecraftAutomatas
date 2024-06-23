@@ -6,19 +6,19 @@ import GetReadyFunction from '@/NestedStateModules/getReady/init'
 import MiningFunction from '@/NestedStateModules/minerJob/miningFunction'
 import CombatStrategyFunction from '@/NestedStateModules/combat/init'
 import { Bot } from 'mineflayer'
-
-export default (bot: Bot, targets: LegionStateMachineTargets) => {
-  const getReady = GetReadyFunction(bot, targets)
+import { Logger } from 'winston';
+export default (bot: Bot, targets: LegionStateMachineTargets,logger:Logger) => {
+  const getReady = GetReadyFunction(bot, targets,logger)
   getReady.stateName = 'Get Ready'
   getReady.x = 125
   getReady.y = 113
 
-  const eatFood = new BehaviorEatFood(bot, targets)
+  const eatFood = new BehaviorEatFood(bot, targets,logger)
   eatFood.stateName = 'Eat Food'
   eatFood.x = 325
   eatFood.y = 113
 
-  const miningFunction = MiningFunction(bot, targets)
+  const miningFunction = MiningFunction(bot, targets,logger)
   miningFunction.x = 125
   miningFunction.y = 213
 

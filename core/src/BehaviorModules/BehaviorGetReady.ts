@@ -2,6 +2,7 @@ import { LegionStateMachineTargets } from "base-types"
 import { inventoryModule } from '@/modules'
 import { StateBehavior } from "mineflayer-statemachine"
 import { Bot } from "mineflayer";
+import { Logger } from 'winston';
 export class BehaviorGetReady implements StateBehavior {
   active: boolean;
   readonly bot: Bot
@@ -9,11 +10,11 @@ export class BehaviorGetReady implements StateBehavior {
   stateName: string
   x?: number
   y?: number
-
+  logger:Logger
   isReady: boolean
 
   inventory: ReturnType<typeof inventoryModule>
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     this.bot = bot
     this.targets = targets
@@ -21,6 +22,7 @@ export class BehaviorGetReady implements StateBehavior {
 
     this.isReady = false
     this.inventory = inventoryModule(bot)
+    this.logger=logger
   }
 
   onStateEntered() {

@@ -7,16 +7,16 @@ import GoSleep from '@/NestedStateModules/goSleepFunction'
 import GoChestsFunctions from '@/NestedStateModules/getReady/goChestsFunctions'
 import { Bot } from 'mineflayer'
 import { BehaviorGetPlayer, BehaviorLoadConfig } from '@/BehaviorModules'
-
+import { Logger } from 'winston';
 export let afterDeathTransitions: Array<StateTransition> = []
 
-export const afterDeathFunction = (bot: Bot, targets: LegionStateMachineTargets): NestedStateMachine => {
+export const afterDeathFunction = (bot: Bot, targets: LegionStateMachineTargets,logger:Logger): NestedStateMachine => {
   const start = new BehaviorIdle()
   start.stateName = 'Start'
   start.x = 125
   start.y = 113
 
-  const startWork = StartWork(bot, targets)
+  const startWork = StartWork(bot, targets,logger)
   startWork.x = 525
   startWork.y = 513
 
@@ -33,7 +33,7 @@ export const afterDeathFunction = (bot: Bot, targets: LegionStateMachineTargets)
   playerEntity.x = 525
   playerEntity.y = 113
 
-  const loadConfig = new BehaviorLoadConfig(bot, targets)
+  const loadConfig = new BehaviorLoadConfig(bot, targets,logger)
   loadConfig.stateName = 'Load Bot Config'
   loadConfig.x = 125
   loadConfig.y = 413

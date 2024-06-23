@@ -3,8 +3,8 @@ import { StateTransition, BehaviorIdle, NestedStateMachine } from 'mineflayer-st
 import { BehaviorFindItems, BehaviorLoadConfig, BehaviorMoveTo } from '@/BehaviorModules'
 import { Vec3 } from "vec3"
 import { Bot } from "mineflayer"
-
-function findItemsAndPickup(bot: Bot, targets: LegionStateMachineTargets) {
+import { Logger } from 'winston';
+function findItemsAndPickup(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
   let botPosition: Vec3
   let botPositionTime = 0
 

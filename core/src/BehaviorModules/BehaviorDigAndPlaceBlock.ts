@@ -4,7 +4,7 @@ import { placeBlockModule, inventoryModule, minerModule, digBlockModule, botWebs
 import { Vec3 } from "vec3"
 import { StateBehavior } from "mineflayer-statemachine"
 import { Bot } from "mineflayer"
-
+import { Logger } from 'winston';
 type ItemWithHardness = Item & {
   name: NonNullable<Item['name']>
   hardness: number
@@ -17,7 +17,7 @@ export class BehaviorDigAndPlaceBlock implements StateBehavior {
   stateName: string
   x?: number
   y?: number
-
+  logger:Logger
   isEndFinished: boolean
 
   digBlock: (position: Vec3) => Promise<void>
@@ -38,7 +38,7 @@ export class BehaviorDigAndPlaceBlock implements StateBehavior {
   timeLimit?: ReturnType<typeof setTimeout>
   listPlaceBlocks?: Array<PositionsChecked>
 
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     const { blocksCanBeReplaced, place, getPathToPlace, getNewPositionForPlaceBlock } = placeBlockModule(bot)
     const { equipHeldItem } = inventoryModule(bot)
@@ -60,6 +60,7 @@ export class BehaviorDigAndPlaceBlock implements StateBehavior {
     this.isEndFinished = false
     this.sidesToPlaceBlock = []
     this.outOfBlocks = false
+    this.logger=logger
   }
 
   isFinished() {

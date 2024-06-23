@@ -5,7 +5,7 @@ import { Vec3 } from 'vec3'
 import { StateBehavior } from "mineflayer-statemachine";
 import { Block } from "prismarine-block";
 import { Bot } from "mineflayer";
-
+import { Logger } from 'winston';
 export class BehaviorMinerCheckLayer implements StateBehavior {
   active: boolean;
   readonly bot: Bot;
@@ -34,8 +34,9 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
 
   x?: number
   y?: number
-
-  constructor(bot: Bot, targets: LegionStateMachineTargets) {
+  logger: Logger
+  
+  constructor(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
     this.active = false
     this.bot = bot
     this.targets = targets
@@ -47,17 +48,21 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
 
     this.blocksToFind = ['lava', 'water', 'bubble_column', 'seagrass', 'tall_seagrass', 'kelp', 'kelp_plant']
     this.floorBlocksToFind = ['air', 'cave_air']
+    this.logger=logger
   }
 
   isFinished() {
+    this.logger.debug(this.bot.username+ " is running" +"isFinished")
     return this.isEndFinished
   }
 
   getFoundLavaOrWater() {
+    this.logger.debug("getFoundLavaOrWater execution")
     return this.foundLavaOrWater
   }
 
   onStateEntered() {
+    this.logger.debug("onStateEntered execution")
     this.foundLavaOrWater = false
     this.isEndFinished = false
 
@@ -65,6 +70,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   onStateExited() {
+    this.logger.debug("onStateExited execution")
     this.bot.pathfinder.setGoal(null)
     this.bot.removeAllListeners('customEventPhysicTick')
 
@@ -83,10 +89,12 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   checkStoneInInventory() {
+    this.logger.debug("checkStoneInInventory execution")
     return this.bot.inventory.items().find(item => this.targets.minerJob.blockForPlace.includes(item.name))
   }
 
   checkArea(): Promise<void> {
+    this.logger.debug("checkArea execution")
     return new Promise(async (resolve) => {
       if (this.minerCords === undefined || this.xCurrent === undefined || this.yCurrent === undefined || this.zCurrent === undefined) {
         throw new Error('No setted: this.minerCords === undefined || this.xCurrent === undefined || this.yCurrent === undefined || this.zCurrent === undefined')
@@ -139,6 +147,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   next() {
+    this.logger.debug("next execution")
     if (this.minerCords === undefined) {
       throw new Error('No setted: this.minerCords === undefined')
     }
@@ -152,6 +161,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   xNext() {
+    this.logger.debug("xNext execution")
     if (this.minerCords === undefined || this.xStart === undefined || this.xEnd === undefined || this.xCurrent === undefined) {
       throw new Error('No setted: this.minerCords === undefined || this.xStart === undefined || this.xEnd === undefined || this.xCurrent === undefined')
     }
@@ -176,6 +186,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   yNext() {
+    this.logger.debug("yNext execution")
     if (this.yCurrent === undefined) {
       throw new Error('No setted: this.yCurrent === undefined')
     }
@@ -184,6 +195,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   zNext() {
+    this.logger.debug("zNext execution")
     if (this.minerCords === undefined || this.zStart === undefined || this.zEnd === undefined || this.zCurrent === undefined) {
       throw new Error('No setted: this.minerCords === undefined || this.zStart === undefined || this.zEnd === undefined || this.zCurrent === undefined')
     }
@@ -208,6 +220,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   getBlockType() {
+    this.logger.debug("getBlockType execution")
     if (this.xCurrent === undefined || this.yCurrent === undefined || this.zCurrent === undefined) {
       throw new Error('No setted: this.xCurrent === undefined || this.yCurrent === undefined || this.zCurrent === undefined')
     }
@@ -217,12 +230,14 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   setMinerCords(minerCords: MineCordsConfig) {
+    this.logger.debug(`setMinerCords execution with param minecords:${JSON.stringify(minerCords)}`)
     this.isLayerFinished = false
     this.minerCords = minerCords
     this.startBlock()
   }
 
   startBlock() {
+    this.logger.debug("startBlock execution")
     if (this.minerCords === undefined) {
       throw new Error('No setted: this.minerCords === undefined')
     }
@@ -305,6 +320,8 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   checkValidBlock(block: Block) {
+    this.logger.debug(`checkValidBlock execution with param block:${JSON.stringify(block)}`)
+    
     if (this.minerCords === undefined) {
       throw new Error('No setted: this.minerCords === undefined')
     }
@@ -325,6 +342,7 @@ export class BehaviorMinerCheckLayer implements StateBehavior {
   }
 
   moveToSeeBlock(x: number, y: number, z: number): Promise<void> {
+    this.logger.debug(`moveToSeeBlock execution with params x:${x} y:${y} z:${z}`)
     return new Promise((resolve) => {
       const goal = new mineflayerPathfinder.goals.GoalBlock(x, y, z)
       this.bot.pathfinder.setMovements(this.targets.movements)

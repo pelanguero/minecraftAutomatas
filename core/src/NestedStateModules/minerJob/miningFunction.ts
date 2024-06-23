@@ -7,7 +7,7 @@ import mineflayerPathfinder, { Movements } from 'mineflayer-pathfinder'
 import { LegionStateMachineTargets, MineCords, MineCordsConfig } from 'base-types'
 import { Bot } from 'mineflayer'
 import { saveBotConfig } from '@/modules'
-
+import { Logger } from 'winston';
 const movingWhile = (bot: Bot, nextCurrentLayer: MineCords, movements: Movements) => {
   let x, y, z
 
@@ -41,7 +41,7 @@ const movingWhile = (bot: Bot, nextCurrentLayer: MineCords, movements: Movements
   pathfinder.setGoal(goal)
 }
 
-function miningFunction(bot: Bot, targets: LegionStateMachineTargets) {
+function miningFunction(bot: Bot, targets: LegionStateMachineTargets,logger:Logger) {
   const start = new BehaviorIdle()
   start.stateName = 'Start'
   start.x = 125
@@ -52,7 +52,7 @@ function miningFunction(bot: Bot, targets: LegionStateMachineTargets) {
   finishedJob.x = 525
   finishedJob.y = 13
 
-  const loadConfig = new BehaviorLoadConfig(bot, targets)
+  const loadConfig = new BehaviorLoadConfig(bot, targets,logger)
   loadConfig.stateName = 'Load Bot Config'
   loadConfig.x = 325
   loadConfig.y = 113
@@ -62,59 +62,59 @@ function miningFunction(bot: Bot, targets: LegionStateMachineTargets) {
   exit.x = 125
   exit.y = 313
 
-  const nextLayer = new BehaviorMinerCurrentLayer(bot, targets)
+  const nextLayer = new BehaviorMinerCurrentLayer(bot, targets,logger)
   nextLayer.stateName = 'Next Layer'
   nextLayer.x = 525
   nextLayer.y = 113
 
-  const currentBlock = new BehaviorMinerCurrentBlock(bot, targets)
+  const currentBlock = new BehaviorMinerCurrentBlock(bot, targets,logger)
   currentBlock.stateName = 'Check next block'
   currentBlock.x = 725
   currentBlock.y = 113
 
-  const digBlock = new BehaviorDigBlock(bot, targets)
+  const digBlock = new BehaviorDigBlock(bot, targets,logger)
   digBlock.stateName = 'Dig Block'
   digBlock.x = 1025
   digBlock.y = 563
 
-  const digAndPlaceBlock = new BehaviorDigAndPlaceBlock(bot, targets)
+  const digAndPlaceBlock = new BehaviorDigAndPlaceBlock(bot, targets,logger)
   digAndPlaceBlock.stateName = 'Dig Block & Place'
   digAndPlaceBlock.x = 925
   digAndPlaceBlock.y = 563
 
-  const moveToBlock = new BehaviorMoveTo(bot, targets)
+  const moveToBlock = new BehaviorMoveTo(bot, targets,logger)
   moveToBlock.stateName = 'Move To Block'
   moveToBlock.movements = targets.movements
   moveToBlock.x = 925
   moveToBlock.y = 313
 
-  const moveToNearBlock = new BehaviorMoveTo(bot, targets)
+  const moveToNearBlock = new BehaviorMoveTo(bot, targets,logger)
   moveToNearBlock.stateName = 'Move To Near Block'
   moveToNearBlock.movements = targets.movements
   moveToNearBlock.x = 925
   moveToNearBlock.y = 113
 
-  const getReady = new BehaviorGetReady(bot, targets)
+  const getReady = new BehaviorGetReady(bot, targets,logger)
   getReady.stateName = 'Check if bot is ready'
   getReady.x = 325
   getReady.y = 563
 
-  const checkLayer = new BehaviorMinerCheckLayer(bot, targets)
+  const checkLayer = new BehaviorMinerCheckLayer(bot, targets,logger)
   checkLayer.stateName = 'Check Layer Lava & Water'
   checkLayer.x = 525
   checkLayer.y = 213
 
-  const eatFood = new BehaviorEatFood(bot, targets)
+  const eatFood = new BehaviorEatFood(bot, targets,logger)
   eatFood.stateName = 'Eat Food'
   eatFood.x = 725
   eatFood.y = 363
 
-  const fillBlocks = FillFunction(bot, targets)
+  const fillBlocks = FillFunction(bot, targets,logger)
   fillBlocks.stateName = 'Fill Water & Lava'
   fillBlocks.x = 350
   fillBlocks.y = 313
 
-  const findItemsAndPickup = FindItemsAndPickup(bot, targets)
+  const findItemsAndPickup = FindItemsAndPickup(bot, targets,logger)
   findItemsAndPickup.stateName = 'Find Items'
   findItemsAndPickup.x = 525
   findItemsAndPickup.y = 363
