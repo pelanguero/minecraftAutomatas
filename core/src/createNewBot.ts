@@ -9,14 +9,17 @@ import { injectBotConfig } from "@/modules";
 import { Vec3 } from "vec3";
 import { Config, defaultConfig } from "base-types";
 import { cloneDeep } from 'lodash'
-
+import { createLogger, format, transports,Logger } from 'winston';
+import path from 'path';
 export type Props = {
   botName?: string;
   botPassword?: string;
   server: string;
   port?: number;
   customStart?: boolean,
-  version?: string
+  version?: string,
+  logRoute?: string,
+  logLevel?: string
 }
 
 
@@ -37,6 +40,17 @@ export const createNewBot = (props: Props): Bot => {
     version,
     checkTimeoutInterval: 10000 * 60 * 5,
   })
+
+  const logger = createLogger({
+    level: props.logLevel,
+    format: format.combine(
+      format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    ),
+    transports: [
+      new transports.File({ filename: path.join( props.logRoute??__dirname, props.botName+'.log') }), // Guardar logs en app.log
+    ]
+  });
 
   const botConfig = new Proxy(cloneDeep(defaultConfig), {
     set: <K extends keyof Config>(target: Config, property: K, value: Config[K]) => {
@@ -102,10 +116,10 @@ export const createNewBot = (props: Props): Bot => {
     if (customStart) {
       const { start } = customStartLoader(bot);
       start().then(() => {
-        StartStateMachine(bot);
+        StartStateMachine(bot,logger);
       });
     } else {
-      StartStateMachine(bot);
+      StartStateMachine(bot,logger);
     }
   });
 

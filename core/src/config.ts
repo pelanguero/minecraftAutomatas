@@ -30,6 +30,8 @@ export const debugMode = process.env.DEBUG_MODE && process.env.DEBUG_MODE === "t
 export const customStart = process.env.CUSTOM_START && process.env.CUSTOM_START === "true" ? true : false
 export const autoRestart = process.env.AUTO_RESTART && process.env.AUTO_RESTART === "true" ? true : false
 export const botsToStart = process.env.BOTS_TO_START
+export const logsPath = process.env.LOGS_PATH
+export const logLevel = process.env.LOG_LEVEL
 
 const config: ConfigEnviorementVariables = {
   environment,
