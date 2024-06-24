@@ -6,10 +6,10 @@ import { logLevel as logLevelEnv } from "@/config";
 import { logsPath as logsPathEnv } from "@/config";
 import { createLogger, format, transports,Logger } from "winston";
 import path from 'path';
-let logger:Logger
+
 const index = () => {
-  if(!logger){
-    logger = createLogger({
+  
+  let logger:Logger = createLogger({
       level: logLevelEnv,
       format: format.combine(
         format.timestamp(),
@@ -22,7 +22,7 @@ const index = () => {
         new transports.File({ filename: path.join(logsPathEnv??__dirname, 'controltower.log') })
       ],
     });
-  }
+  
 
   connectCore()
 
@@ -41,7 +41,7 @@ const index = () => {
     i++;
     if (i <= botsToStart.length) {
       setTimeout(() => {
-        startBot(botToStart.username,logsPathEnv??__dirname,logLevelEnv??"info",logger);
+        startBot(botToStart.username,logsPathEnv??__dirname,logLevelEnv??"debug",logger);
         runNextBot();
       }, 7000);
     }

@@ -7,9 +7,8 @@ import { Logger } from 'winston';
 
 export const startBot = (botName: string, logsPath: string,logLevel: string,logger:Logger  ,password?: string) => {
 
-
-
-    const command = environment === 'stage' ? `npm run ts ${botName} ${password ?? ''}` : `node ${path.join(__dirname, 'start_bot.js')} ${botName} ${password ?? ''} ${logsPath} ${logLevel}`
+    
+    const command = environment === 'stage' ? `npm run ts ${botName} ${password ?? ''}` : `node ${path.join(__dirname, 'start_bot.js')} ${botName} ${logsPath} ${logLevel} ${password ?? ''}`
 
     exec(command, (err, stdout, stderr) => {
         if (err) {

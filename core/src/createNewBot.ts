@@ -30,7 +30,9 @@ export const createNewBot = (props: Props): Bot => {
     server,
     port = 25565,
     customStart = false,
-    version = undefined
+    version = undefined,
+    logRoute = __dirname,
+    logLevel = "debug"
   } = props
 
   const bot = mineflayer.createBot({
@@ -52,6 +54,8 @@ export const createNewBot = (props: Props): Bot => {
     ]
   });
 
+  logger.info(`ruta logs: ${props.logRoute}`)
+  logger.info(`log level: ${props.logLevel}`)
   const botConfig = new Proxy(cloneDeep(defaultConfig), {
     set: <K extends keyof Config>(target: Config, property: K, value: Config[K]) => {
       if (typeof property === 'string') {

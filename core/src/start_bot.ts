@@ -7,10 +7,10 @@ const botConfig: Props = {
     server,
     port,
     customStart,
-    botPassword: process.argv[3],
+    botPassword: process.argv[5],
     botName: process.argv[2],
-    logRoute: process.argv[4],
-    logLevel: process.argv[5]
+    logRoute: process.argv[3],
+    logLevel: process.argv[4]
 }
 
 export const bot = createNewBot(botConfig)
