@@ -1,5 +1,6 @@
 import path from 'path'
-import { exec } from "child_process"
+import { exec } from "child_process";
+import { spawn } from 'child_process';
 import { autoRestart, environment } from "@/config";
 import { Logger } from 'winston';
 
@@ -8,27 +9,20 @@ import { Logger } from 'winston';
 export const startBot = (botName: string, logsPath: string,logLevel: string,logger:Logger  ,password?: string) => {
 
     
-    const command = environment === 'stage' ? `npm run ts ${botName} ${password ?? ''}` : `node ${path.join(__dirname, 'start_bot.js')} ${botName} ${logsPath} ${logLevel} ${password ?? ''}`
+    const process = environment === 'stage' ? spawn("npm",["run","ts",botName,password??""]) :  spawn("node",[path.join(__dirname, 'start_bot.js'),botName,logsPath,logLevel,password??""])
+    
+    //logger.info(command)
+    
 
-    exec(command, (err, stdout, stderr) => {
-        if (err) {
-            logger.info(`Bot broken: ${botName}`);
-            logger.info(`Error: ${err}`);
-
-            if (autoRestart) {
-                setTimeout(() => {
-                    startBot(botName,logsPath,logLevel, logger,password);
-                }, 1000);
-            }
-            return;
-        }
-
-        if (stdout) {
-            logger.info(`Stdout: ${stdout}`)
-        }
-
-        if (stderr) {
-            logger.error(`Stderr: ${stderr}`)
-        }
-    })
+    process.stdout.on('data', (data) => {
+        logger.info(`output from: ${botName} ${data}`)
+    });
+    
+    process.stderr.on('data', (data) => {
+        logger.error(`error from: ${botName} ${data}`)
+    });
+    
+    process.on('close', (code) => {
+        logger.info(`${botName} closed: ${code}`)
+    });
 }
