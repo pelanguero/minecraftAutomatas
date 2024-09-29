@@ -3,13 +3,14 @@ import { exec } from "child_process";
 import { spawn } from 'child_process';
 import { autoRestart, environment } from "@/config";
 import { Logger } from 'winston';
+import { stringify } from 'uuid';
 
 
 
-export const startBot = (botName: string, logsPath: string,logLevel: string,logger:Logger  ,password?: string) => {
+export const startBot = (botName: string, logsPath: string,logLevel: string,logger:Logger,online:boolean  ,password?: string) => {
 
     
-    const process = environment === 'stage' ? spawn("npm",["run","ts",botName,password??""]) :  spawn("node",[path.join(__dirname, 'start_bot.js'),botName,logsPath,logLevel,password??""])
+    const process = environment === 'stage' ? spawn("npm",["run","ts",botName,password??""]) :  spawn("node",[path.join(__dirname, 'start_bot.js'),botName,logsPath,logLevel,String(online),password??""])
     
     //logger.info(command)
     

@@ -32,6 +32,7 @@ export const autoRestart = process.env.AUTO_RESTART && process.env.AUTO_RESTART 
 export const botsToStart = process.env.BOTS_TO_START
 export const logsPath = process.env.LOGS_PATH
 export const logLevel = process.env.LOG_LEVEL
+export const online = process.env.ONLINE
 
 const config: ConfigEnviorementVariables = {
   environment,

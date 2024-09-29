@@ -4,6 +4,7 @@ import { connectCore } from "@/modules";
 import { botsToStart as botsToStartEnv, logsPath } from "@/config";
 import { logLevel as logLevelEnv } from "@/config";
 import { logsPath as logsPathEnv } from "@/config";
+import { online as onlineEnv } from "@/config";
 import { createLogger, format, transports,Logger } from "winston";
 import path from 'path';
 
@@ -41,7 +42,7 @@ const index = () => {
     i++;
     if (i <= botsToStart.length) {
       setTimeout(() => {
-        startBot(botToStart.username,logsPathEnv??__dirname,logLevelEnv??"debug",logger);
+        startBot(botToStart.username,logsPathEnv??__dirname,logLevelEnv??"debug",logger,onlineEnv);
         runNextBot();
       }, 7000);
     }

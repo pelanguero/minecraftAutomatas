@@ -19,7 +19,8 @@ export type Props = {
   customStart?: boolean,
   version?: string,
   logRoute?: string,
-  logLevel?: string
+  logLevel?: string,
+  online?: boolean
 }
 
 
@@ -34,14 +35,24 @@ export const createNewBot = (props: Props): Bot => {
     logRoute = __dirname,
     logLevel = "debug"
   } = props
-
-  const bot = mineflayer.createBot({
-    username: botName,
-    host: server,
-    port: port,
-    version,
-    checkTimeoutInterval: 10000 * 60 * 5,
-  })
+  
+    const bot = props.online? mineflayer.createBot({
+      username: botName,
+      host: server,
+      port: port,
+      auth: "microsoft",
+      version,
+      checkTimeoutInterval: 10000 * 60 * 5,
+    }):
+     mineflayer.createBot({
+      username: botName,
+      host: server,
+      port: port,
+      version,
+      checkTimeoutInterval: 10000 * 60 * 5,
+    });
+  
+  
 
   const logger = createLogger({
     level: props.logLevel,
